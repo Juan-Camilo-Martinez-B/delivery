@@ -7,6 +7,7 @@ import '../providers/food_provider.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/product_card.dart';
 import 'customer_support_page.dart';
+import 'product_customize_page.dart';
 import 'user_profile_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -135,7 +136,9 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductCustomizePage()));
+        },
         backgroundColor: AppColors.primary,
         elevation: 8,
         shape: const CircleBorder(),

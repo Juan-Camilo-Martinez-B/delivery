@@ -44,16 +44,6 @@ class FoodProvider with ChangeNotifier {
       imagePath: "assets/images/product_4.png",
       ingredients: ["Fried Chicken", "Spicy Mayo", "Coleslaw"],
     ),
-    Product(
-      id: '5',
-      name: "Classic Cheeseburger",
-      description: "A timeless classic with premium beef and double cheese.",
-      price: 10.00,
-      rating: 5.0,
-      preparationTime: "15 mins",
-      imagePath: "assets/images/product_1.png",
-      ingredients: ["Double Beef", "Double Cheese", "Secret Sauce"],
-    ),
   ];
 
   final List<Product> _cart = [];
