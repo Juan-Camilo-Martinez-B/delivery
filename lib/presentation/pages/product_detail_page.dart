@@ -7,10 +7,18 @@ import '../../domain/entities/product.dart';
 import '../providers/food_provider.dart';
 import 'payment_page.dart';
 
-class ProductDetailPage extends StatelessWidget {
+class ProductDetailPage extends StatefulWidget {
   final Product product;
 
   const ProductDetailPage({super.key, required this.product});
+
+  @override
+  State<ProductDetailPage> createState() => _ProductDetailPageState();
+}
+
+class _ProductDetailPageState extends State<ProductDetailPage> {
+  int _portion = 2;
+  double _spicy = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +59,8 @@ class ProductDetailPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 80, bottom: 20),
                 color: AppColors.lightGray.withOpacity(0.5),
                 child: Hero(
-                  tag: product.id,
-                  child: Image.asset(product.imagePath, fit: BoxFit.contain),
+                  tag: widget.product.id,
+                  child: Image.asset(widget.product.imagePath, fit: BoxFit.contain),
                 ),
               ),
             ),
@@ -68,14 +76,14 @@ class ProductDetailPage extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          product.name,
+                          widget.product.name,
                           style: AppTextStyles.title,
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => foodProvider.toggleFavorite(product.id),
+                        onTap: () => foodProvider.toggleFavorite(widget.product.id),
                         child: Image.asset(
-                          foodProvider.isFavorite(product.id)
+                          foodProvider.isFavorite(widget.product.id)
                               ? 'assets/icons/heart_filled.png'
                               : 'assets/icons/heart.png',
                           width: 24,
@@ -89,44 +97,94 @@ class ProductDetailPage extends StatelessWidget {
                       const Icon(Icons.star, size: 16, color: AppColors.accent),
                       const SizedBox(width: 5),
                       Text(
-                        product.rating.toString(),
+                        widget.product.rating.toString(),
                         style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 20),
                       const Icon(Icons.timer_outlined, size: 16, color: AppColors.textSecondary),
                       const SizedBox(width: 5),
                       Text(
-                        product.preparationTime,
+                        widget.product.preparationTime,
                         style: AppTextStyles.body,
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    product.description,
+                    widget.product.description,
                     style: AppTextStyles.body.copyWith(height: 1.5),
                   ),
-                  const SizedBox(height: 25),
-                  Text(
-                    "Ingredients",
-                    style: AppTextStyles.subtitle,
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Spicy", style: AppTextStyles.subtitle),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            width: 160,
+                            child: SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: AppColors.primary,
+                                inactiveTrackColor: AppColors.lightGray,
+                                thumbColor: AppColors.primary,
+                                trackHeight: 4,
+                              ),
+                              child: Slider(
+                                value: _spicy,
+                                min: 0,
+                                max: 2,
+                                divisions: 2,
+                                onChanged: (v) => setState(() => _spicy = v),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 160,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Mild", style: AppTextStyles.caption),
+                                    Text("Hot", style: AppTextStyles.caption.copyWith(color: AppColors.primary)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Portion", style: AppTextStyles.subtitle),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              _circleIconButton(icon: Icons.remove, onTap: () => setState(() => _portion = (_portion - 1).clamp(1, 99))),
+                              const SizedBox(width: 12),
+                              Container(
+                                width: 38,
+                                height: 38,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AppColors.lightGray,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text("$_portion", style: AppTextStyles.subtitle),
+                              ),
+                              const SizedBox(width: 12),
+                              _circleIconButton(icon: Icons.add, onTap: () => setState(() => _portion = (_portion + 1).clamp(1, 99))),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 15),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: product.ingredients.map((ingredient) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.lightGray),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Text(ingredient, style: AppTextStyles.body),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 100), // Space for bottom button
+                  const SizedBox(height: 110),
                 ],
               ),
             ),
@@ -147,36 +205,58 @@ class ProductDetailPage extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Price", style: AppTextStyles.caption),
-                Text(
-                  "\$${product.price.toStringAsFixed(2)}",
-                  style: AppTextStyles.title.copyWith(color: AppColors.primary),
-                ),
-              ],
-            ),
-            const SizedBox(width: 30),
-            Expanded(
+            SizedBox(
+              height: 52,
               child: ElevatedButton(
-                onPressed: () {
-                  foodProvider.addToCart(product);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentPage()));
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: Text("Order Now", style: AppTextStyles.button),
+                child: Text(
+                  "\$${widget.product.price.toStringAsFixed(2)}",
+                  style: AppTextStyles.button,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: SizedBox(
+                height: 52,
+                child: ElevatedButton(
+                  onPressed: () {
+                    foodProvider.addToCart(widget.product);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentPage()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.dark,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: Text("ORDER NOW", style: AppTextStyles.button),
+                ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _circleIconButton({required IconData icon, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 38,
+        height: 38,
+        decoration: const BoxDecoration(
+          color: AppColors.primary,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white, size: 20),
       ),
     );
   }
