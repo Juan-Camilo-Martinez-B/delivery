@@ -43,7 +43,7 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 160),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -181,7 +181,6 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
                 },
               ),
             ),
-            const SizedBox(height: 120),
           ],
         ),
       ),
@@ -283,10 +282,23 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: AppColors.lightGray,
-              child: Text(label.characters.first, style: AppTextStyles.subtitle),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: SizedBox(
+                width: 48,
+                height: 48,
+                child: Image.asset(
+                  _assetForLabel(label),
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) {
+                    return Container(
+                      color: AppColors.lightGray,
+                      alignment: Alignment.center,
+                      child: Text(label.characters.first, style: AppTextStyles.subtitle),
+                    );
+                  },
+                ),
+              ),
             ),
             const SizedBox(height: 8),
             Text(label, style: AppTextStyles.caption),
@@ -305,5 +317,15 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
       ),
     );
   }
-}
 
+  String _assetForLabel(String label) {
+    final key = label.toLowerCase();
+    if (['tomato', 'onions', 'pickles', 'bacons'].contains(key)) {
+      return 'assets/images/toppings/$key.png';
+    }
+    if (['fries', 'coleslaw', 'salad', 'onion'].contains(key)) {
+      return 'assets/images/sides/$key.png';
+    }
+    return 'assets/images/toppings/$key.png';
+  }
+}
