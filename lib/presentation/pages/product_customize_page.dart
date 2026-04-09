@@ -39,6 +39,19 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Image.asset('assets/icons/search.png', width: 20),
+            ),
+          ),
+        ],
         backgroundColor: AppColors.white,
         elevation: 0,
       ),
@@ -50,6 +63,12 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  width: 150,
+                  height: 180,
+                  child: Image.asset('assets/images/product_detail_1.png', fit: BoxFit.contain),
+                ),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,12 +135,6 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(width: 16),
-                SizedBox(
-                  width: 150,
-                  height: 180,
-                  child: Image.asset('assets/images/product_detail_1.png', fit: BoxFit.contain),
                 ),
               ],
             ),
@@ -198,20 +211,18 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
         ),
         child: Row(
           children: [
-            SizedBox(
-              height: 52,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Total", style: AppTextStyles.caption),
+                Text(
+                  "\$${_total.toStringAsFixed(2)}",
+                  style: AppTextStyles.title.copyWith(color: AppColors.primary),
                 ),
-                child: Text("\$${_total.toStringAsFixed(2)}", style: AppTextStyles.button),
-              ),
+              ],
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: SizedBox(
                 height: 52,
@@ -231,9 +242,9 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.dark,
+                    backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(18),
                     ),
                   ),
                   child: Text("ORDER NOW", style: AppTextStyles.button),
@@ -252,9 +263,9 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
       child: Container(
         width: 44,
         height: 44,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.primary,
-          shape: BoxShape.circle,
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(icon, color: Colors.white, size: 20),
       ),
