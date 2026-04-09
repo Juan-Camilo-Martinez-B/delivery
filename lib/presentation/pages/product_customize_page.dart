@@ -55,8 +55,11 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
         backgroundColor: AppColors.white,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 160),
+      body: Builder(
+        builder: (context) {
+          final bottomInset = MediaQuery.of(context).viewPadding.bottom;
+          return SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(20, 20, 20, bottomInset + 140),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -142,7 +145,7 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
             Text("Toppings", style: AppTextStyles.subtitle),
             const SizedBox(height: 12),
             SizedBox(
-              height: 110,
+              height: 130,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: _toppings.length,
@@ -170,7 +173,7 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
             Text("Side options", style: AppTextStyles.subtitle),
             const SizedBox(height: 12),
             SizedBox(
-              height: 110,
+              height: 130,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: _sides.length,
@@ -196,6 +199,8 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
             ),
           ],
         ),
+      );
+        }
       ),
       bottomSheet: Container(
         padding: const EdgeInsets.all(20),
@@ -295,12 +300,13 @@ class _ProductCustomizePageState extends State<ProductCustomizePage> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: SizedBox(
-                width: 48,
-                height: 48,
+              child: Container(
+                width: 56,
+                height: 56,
+                color: AppColors.white,
                 child: Image.asset(
                   _assetForLabel(label),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                   errorBuilder: (_, __, ___) {
                     return Container(
                       color: AppColors.lightGray,
